@@ -1,0 +1,6 @@
+First of all, I make a input line to get txt file. 
+But my com has some problems in using flask.
+I can use this codes to input "./app.py", we need to check this out.
+
+And, next goal is making counting number codes and cosine similarity codes.
+i will get cosine similarity codes, so you have to make counting number codes ASAP
