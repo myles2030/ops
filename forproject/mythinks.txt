@@ -1,0 +1,7 @@
+First of all, I make the line of checking the txt files.
+So, we have to crawling this urls and counting the numbers.
+
+As you know, we already have crawling codes and counting words code, so we can make this little bit easily.
+Then i will make cosine similarity codes. 
+
+PLZ make codes as fast as you can.
