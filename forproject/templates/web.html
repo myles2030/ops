@@ -2,12 +2,12 @@
 
 <html>
 	<head>
-		<title>Get URL</title>
+		<title>Analyzing URLs</title>
 	</head>
 	<body>
 		<form method="GET" action="/urladdress">
 			<div>
-				<label for="results">type url</label>
+				<label for="results">First way to get URL</label>
 				<input type="text" name="results">
 			</div>
 			<div class='button'>
@@ -15,17 +15,109 @@
 		</form>
 
 		<form action = "http://localhost:5000/textfile" method = "POST" enctype = "multipart/form-data">
+			<p>Second way to get URL</p>
 			<input type = "file"name = "file"/>
 			<div class='button'>
 				<button type="submit">send</button>
 		</form>
 		<div>
 			<p>
-			<h5>
-				{{results}}
-			</h5>
+			<center><span style = "font-size:1.5em; color: green;">
+			      The Result of Analyzing URLs
+			</span>
+			</center>
 			</p>
+			<hr style="border:black 2px dashed">
 		</div>
+
+<style type="text/css">
+
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:blakc;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px; overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px; font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-nrh5{background-color:#c6bdbd;color:#000000;text-align:left;vertical-align:top}
+.tg .tg-703j{background-color:#9b8989;color:#000000;text-align:left;text-decoration:underline;vertical-align:top}
+.tg .tg-ss57{background-color:#9b8989;color:#000000;text-align:left;vertical-align:top}
+.tg .tg-gi99{background-color:#c6bdbd;color:#000000;text-align:left;text-decoration:underline;vertical-align:top}
+</style>
+<table class="tg">
+	<thead>
+		<tr>
+			<th class="tg-703j">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The server URL's&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+			<th class="tg-ss57">word's count</th>
+			<th class="tg-ss57">time taking</th>
+			<th class="tg-ss57">find top 10 words by using tf-idf</th>
+			<th class="tg-ss57">find similar site by using cosine similarity</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class = "tg-gi99"></td>
+			<td class = "tg-nrh5"></td>
+			<td class = "tg-nrh5"></td>
+			<td class = "tg-nrh5"></td>
+			<td class = "tg-nrh5"></td>
+		</tr>
+		<tr>
+			<td class = "tg-703j"></td>
+			<td class = "tg-ss57"></td>
+			<td class = "tg-ss57"></td>
+			<td class = "tg-ss57"></td>
+			<td class = "tg-ss57"></td>
+		</tr>
+		<tr>
+                        <td class = "tg-gi99"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                </tr>
+                <tr>
+                        <td class = "tg-703j"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                </tr>
+		<tr>
+                        <td class = "tg-gi99"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                </tr>
+                <tr>
+                        <td class = "tg-703j"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                </tr>
+		<tr>
+                        <td class = "tg-gi99"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                </tr>
+                <tr>
+                        <td class = "tg-703j"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                        <td class = "tg-ss57"></td>
+                </tr>
+                <tr>
+                        <td class = "tg-gi99"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                        <td class = "tg-nrh5"></td>
+                </tr>
+        </tbody>
+</table>
+
+
 	</body>
 </html>
 

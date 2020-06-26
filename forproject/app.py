@@ -39,7 +39,7 @@ def textfile():
     f = request.files['file']
     f.save(secure_filename(f.filename))
     
-    tf = open("text.txt", "r")
+    tf = open("url_list.txt", "r")
 
     urldata = list()
     urlvalue = list()
