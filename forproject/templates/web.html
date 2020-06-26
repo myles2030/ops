@@ -7,21 +7,22 @@
 	<body>
 		<form method="GET" action="/urladdress">
 			<div>
-				<label for="address">type url</label>
-				<input type="text" name="address">
+				<label for="results">type url</label>
+				<input type="text" name="results">
 			</div>
 			<div class='button'>
 				<button type="submit">send</button>
 		</form>
 
-		<form action = "http://localhost:5000/urladdress" method = "POST" enctype = "multipart/form-data">
+		<form action = "http://localhost:5000/textfile" method = "POST" enctype = "multipart/form-data">
 			<input type = "file"name = "file"/>
-			<input type = "submit"/>
+			<div class='button'>
+				<button type="submit">send</button>
 		</form>
 		<div>
 			<p>
 			<h5>
-				{{address}}
+				{{results}}
 			</h5>
 			</p>
 		</div>

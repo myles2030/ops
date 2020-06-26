@@ -1,0 +1,2 @@
+http://turbine.apache.org/
+http://ambari.apache.org/
