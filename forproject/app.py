@@ -2,16 +2,11 @@
 
 from flask import Flask, render_template,request
 from werkzeug.utils import secure_filename
-<<<<<<< HEAD
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 import time
-=======
-from urllib.request import urlopen 
-from bs4 import BeautifulSoup
-import re
->>>>>>> 79913b8c1441b5f0c90758b9429cce6568798c36
 
 app = Flask(__name__)
 
@@ -21,7 +16,6 @@ def send():
 
 @app.route('/urladdress', methods=['GET', 'POST'])
 def urladdress():
-<<<<<<< HEAD
     temp = request.args.get('results')
     
     webpage = urlopen(temp)
@@ -70,30 +64,13 @@ def textfile():
 
         buck = re.sub('<.+?>',"",buck,0).strip()
 
+
+
         glaz = buck.replace('(',' ').replace(')',' ').replace(',',' ').replace('.',' ').replace(";"," ").replace('"',' ').replace("'"," ").split()
     
         datacount.append(len(glaz))
 
     return render_template('web.html',results = datacount)
-
-
-=======
-        temp = request.args.get('results')
-        #f = request.files['file']
-        #f.save(secure_filename(f.filename))
-        
-        webpage = urlopen(temp)
-        bs = BeautifulSoup(webpage,'html.parser')
-        tags = str(bs.findAll("div",{"class":"section"}))
-
-        tags = re.sub('<.+?>',"",tags,0).strip()
-
-        b = tags.replace('(',' ').replace(')',' ').replace(',',' ').replace('.',' ')replace(';',' ').replace('"',' ').replace("'"," ").split()
-
-        count = len(b)
-        
-        return render_template('web.html', results = count)
->>>>>>> 79913b8c1441b5f0c90758b9429cce6568798c36
 
 if __name__ == "__main__":
     app.run()
