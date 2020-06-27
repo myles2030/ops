@@ -72,6 +72,35 @@ def textfile():
 
     return render_template('web.html',results = datacount)
 
+@app.route('/tftesting', methods = ['GET','POST'])
+def tftest():
+    temp = request.args.get('results')
+    tfdata = 
+    tfpage = urlopen(results[tfdata])
+    kali = BequtifulSoup(tfpage,'html.parser')
+
+    lesion = str(kali.findAll("div",{"class":"section"}))
+
+
+      for urllist in urldata:
+        twebpage = urlopen(urllist)
+        ash = BeautifulSoup(twebpage,'html.parser')
+        buck = str(ash.findAll("div",{"class":"section"}))
+
+        urlvalue.append("success")
+
+        #fail: no url, and url that can't crawling.
+
+        buck = re.sub('<.+?>',"",buck,0).strip()
+
+
+
+        glaz = buck.replace('(',' ').replace(')',' ').replace(',',' ').replace('.',' ').replace(";"," ").replace('"',' ').replace("'"," ").split()
+
+
+
+
+
 if __name__ == "__main__":
     app.run()
 
