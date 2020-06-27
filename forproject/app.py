@@ -7,15 +7,28 @@ from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 import time
+import numpy as np
 
 app = Flask(__name__)
 
+def cos_similarity(v1,v2):
+    doc_product = np.dot(v1,v2)
+    norm = (np.sqrt(sum(np.square(v1)))*np.sqrt(sum(np.square(v2))))
+    similarity = doc_product / norm
+
+    return similarity
+
 @app.route('/')
 def send():
-    return render_template('web.html', results=0)
+    return render_template('web.html', results=0,wordcount = 0,timecount = 0)
 
 @app.route('/urladdress', methods=['GET', 'POST'])
 def urladdress():
+    urlre = list()
+    wordre = list()
+    timere = list()
+
+
     temp = request.args.get('results')
     
     webpage = urlopen(temp)
@@ -32,7 +45,11 @@ def urladdress():
 
     endtime = time.time()-start
 
-    return render_template('web.html', results = count)
+    urlre.append(temp)
+    wordre.append(count)
+    timere.append(endtime)
+
+    return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere)
 
 @app.route('/textfile', methods = ['GET','POST'])
 def textfile():
@@ -52,6 +69,8 @@ def textfile():
         countingline = countingline + 1
 
     datacount = list()
+    timecounted = list()
+    doc_list = list()
 
     for urllist in urldata:
         twebpage = urlopen(urllist)
@@ -64,13 +83,32 @@ def textfile():
 
         buck = re.sub('<.+?>',"",buck,0).strip()
 
-
+        doc_list.append(buck)
+        
+        txstart=time.time()
 
         glaz = buck.replace('(',' ').replace(')',' ').replace(',',' ').replace('.',' ').replace(";"," ").replace('"',' ').replace("'"," ").split()
     
         datacount.append(len(glaz))
 
-    return render_template('web.html',results = datacount)
+        txendtime = time.time() - txstart
+
+        timecounted.append(txendtime)
+
+    
+    tfidf_vect_simple = TfidfVectorizer()
+    feature_vect_simple = tfidf_vect_simple.fit_transform(doc_list)
+
+    feature_vect_dense = feature_vect_simple.todense()
+
+    vect1 = np.array(feature_vect_dense[0]).reshape(-1,)
+    vect2 = np.array(feature_vect_dense[1]).reshape(-1,)
+    
+    similarity_simple = list()
+
+    similarity_simple.append(cos_similarity(vect1, vect2))
+
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = similarity_simple)
 
 @app.route('/tftesting', methods = ['GET','POST'])
 def tftest():
