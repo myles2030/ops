@@ -21,7 +21,6 @@ urldata = list()
 cos_result = list()
 countingline = 0
 cos_check = list()
-cos_resulturl = list()
 cos_final = list()
 
 app = Flask(__name__)
@@ -35,7 +34,7 @@ def cos_similarity(v1,v2):
 
 @app.route('/')
 def send():
-    return render_template('web.html', results=0,wordcount = 0,timecount = 0,topword=0,message=0)
+    return render_template('web.html', results=0,wordcount = 0,timecount = 0,topword=0,message=0,urls=0)
 
 @app.route('/urladdress', methods=['GET', 'POST'])
 def urladdress():
@@ -47,7 +46,7 @@ def urladdress():
     temp = request.args.get('results')
    
     if temp == '':
-        return render_template('web.html',results=0,wordcount=0,timecount = 0, topword=0,message='fail')
+        return render_template('web.html',results=0,wordcount=0,timecount = 0, topword=0,message='fail',urls=0)
 
     webpage = urlopen(temp)
     bs = BeautifulSoup(webpage,'html.parser')
@@ -69,7 +68,7 @@ def urladdress():
 
     warning ="success, but you can't analyze"
 
-    return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere,topword = 0,message = warning)
+    return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere,topword = 0,message = warning,urls=0)
 
 @app.route('/textfile', methods = ['GET','POST'])
 def textfile():
@@ -113,9 +112,7 @@ def textfile():
     
         datacount.append(len(glaz))
 
-        txendtime = time.time() - txstart
-
-        timecounted.append(txendtime)
+        timecounted.append(time.time() - txstart)
 
     warning = "success"
 
@@ -148,13 +145,21 @@ def textfile():
                 cos_result[i] = cos_similarity(cos_vect[m],cos_vect[i])
 
         cosinetime.append(time.time()-cosinestart)
-        cos_sorted = 0
-        cos_sorted = sorted(cos_check)
+        matching = list()
+        temp = 0
 
+        for z in range(11):
+           matching.append(z)
+        blank = "\n"
         for k in range(3):
             for r in range(countingline):
-               if (cos_sorted[k] == cos_result[r]):
-                   cos_resulturl.append(urldata[r] + "\n")
+                if (cos_result[k] < cos_result[r]):
+                   temp = matching[k]
+                   matching[k] = matching[r]
+                   matching[r] = temp
+        cos_resulturl = list()
+        for e in range(3):
+             cos_resulturl.append(blank +  urldata[matching[e]])
 
         cos_final.append(cos_resulturl)
 
@@ -164,21 +169,24 @@ def textfile():
     indices = np.argsort(tfidf_vect_simple.idf_)[::-1]
     features = tfidf_vect_simple.get_feature_names()
     top_n = 10
-    tfidftime.append(time.time() - tfidfstart)
+    for i in range(countingline):
+        tfidftime.append(time.time() - tfidfstart)
 
     topping = [features[i] for i in indices[:top_n]]
     lineto = "\n"
 
     for i in range(len(topping)):
-        top_features.append(topping[i].replace(",","") + lineto)
+        top_features.append(lineto + topping[i].replace(",",""))
 
 
     return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,message= warning,topword = top_features, urls= cos_final)
 
 @app.route('/resulting', methods=['GET','POST'])
 def resulting():
-    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features)
-
+    if(request.method=='GET'):
+        return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features,urls=cos_final)
+    elif(request.method=='POST'):
+        return render_template('web.html',results=urldata,wordcount=datacount,timecount=cosinetime,topword = top_features,urls=cos_final)
 @app.route('/cosinere', methods=['GET','POST'])
 def cosinere():
     return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_final)
