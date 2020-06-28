@@ -22,6 +22,7 @@ cos_result = list()
 countingline = 0
 cos_check = list()
 cos_resulturl = list()
+cos_final = list()
 
 app = Flask(__name__)
 
@@ -143,18 +144,19 @@ def textfile():
             cos_vect.append(np.array(feature_vect_dense[i]).reshape(-1,))
         
         for i in range(countingline):
-            if(i != m):
                 cos_check[i] = cos_similarity(cos_vect[m],cos_vect[i])
                 cos_result[i] = cos_similarity(cos_vect[m],cos_vect[i])
 
         cosinetime.append(time.time()-cosinestart)
-    
-    cos_sorted = sorted(cos_check)
+        cos_sorted = 0
+        cos_sorted = sorted(cos_check)
 
-    for k in range(3):
-        for r in range(countingline):
-            if cos_sorted[k] == cos_result[r]:
-                cos_resulturl.append(urldata[r] + "\n")
+        for k in range(3):
+            for r in range(countingline):
+               if (cos_sorted[k] == cos_result[r]) and (cos_sorted[k] != 1):
+                   cos_resulturl.append(urldata[r] + "\n")
+
+        cos_final.append(cos_resulturl)
 
 
     tfidfstart = time.time()
@@ -171,15 +173,15 @@ def textfile():
         top_features.append(topping[i].replace(",","") + lineto)
 
 
-    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning,urls= cos_resulturl)
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning,urls= cos_final)
 
 @app.route('/resulting', methods=['GET','POST'])
 def resulting():
-    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features)
+    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = cos_final)
 
 @app.route('/cosinere', methods=['GET','POST'])
 def cosinere():
-    return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_resulturl)
+    return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_final)
 
 if __name__ == "__main__":
     app.run()
