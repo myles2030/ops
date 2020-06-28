@@ -9,6 +9,19 @@ import re
 import time
 import numpy as np
 
+cos_vect = list()
+counting = 0
+top_features = list()
+urldata = list()
+timecounted = list()
+datacount = list()
+tfidftime = list()
+cosinetime = list()
+urldata = list()
+cos_result = list()
+countingline = 0
+cos_check = list()
+
 app = Flask(__name__)
 
 def cos_similarity(v1,v2):
@@ -20,7 +33,7 @@ def cos_similarity(v1,v2):
 
 @app.route('/')
 def send():
-    return render_template('web.html', results=0,wordcount = 0,timecount = 0)
+    return render_template('web.html', results=0,wordcount = 0,timecount = 0,topword=0,message=0)
 
 @app.route('/urladdress', methods=['GET', 'POST'])
 def urladdress():
@@ -49,18 +62,21 @@ def urladdress():
     wordre.append(count)
     timere.append(endtime)
 
-    return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere)
+    warning ="success, but you can't analyze"
+
+    return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere,topword = 0,message = warning)
 
 @app.route('/textfile', methods = ['GET','POST'])
 def textfile():
+
     f = request.files['file']
     f.save(secure_filename(f.filename))
     
     tf = open("url_list.txt", "r")
-
-    urldata = list()
+    
     urlvalue = list()
-    countingline = 0
+
+    global countingline
 
     while True:
         line = tf.readline()
@@ -68,9 +84,8 @@ def textfile():
         urldata.append(line[:-1])
         countingline = countingline + 1
 
-    datacount = list()
-    timecounted = list()
     doc_list = list()
+
 
     for urllist in urldata:
         twebpage = urlopen(urllist)
@@ -96,24 +111,68 @@ def textfile():
 
         timecounted.append(txendtime)
 
+    warning = "success"
 
-    tfidf_vect_simple = TfidfVectorizer()
-    feature_vect_simple = tfidf_vect_simple.fit_transform(doc_list)
+    for cuv in range(countingline - 1):
+        l = cuv + 1
+        for l in range(countingline):
+            if urldata[cuv] == urldata[l]:
+                warning = "same url"
+    for z in range(20):
+         cos_check.append(0)
+         cos_result.append(0)
 
-    feature_vect_dense = feature_vect_simple.todense()
+    for m in range(countingline):
 
-    vect1 = np.array(feature_vect_dense[0]).reshape(-1,)
-    vect2 = np.array(feature_vect_dense[1]).reshape(-1,)
+        cosinestart = time.time()
+
+        tfidf_vect_simple = TfidfVectorizer()
+        feature_vect_simple = tfidf_vect_simple.fit_transform(doc_list)
+
+        feature_vect_dense = feature_vect_simple.todense()
+        
+
+        for i in range(countingline):
+            cos_vect.append(np.array(feature_vect_dense[i]).reshape(-1,))
+        
+        for i in range(countingline):
+            if(i != m):
+                cos_check[i] = cos_similarity(cos_vect[m],cos_vect[i])
+                cos_result[i] = cos_similarity(cos_vect[m],cos_vect[i])
+
+        cosinetime.append(time.time()-cosinestart)
     
+    cos_sorted = sorted(cos_check)
+
+    for k in range(3):
+        for r in range(countingline):
+            if cos_sorted[k] == cos_result[r]:
+                cos_resulturl.append(urldata[r] + "\n")
+
+
+    tfidfstart = time.time()
+
     indices = np.argsort(tfidf_vect_simple.idf_)[::-1]
     features = tfidf_vect_simple.get_feature_names()
     top_n = 10
+    tfidftime.append(time.time() - tfidfstart)
 
-    top_features = [features[i] for i in indices[:top_n]]
+    topping = [features[i] for i in indices[:top_n]]
+    lineto = "\n"
 
-    return render_template('web.html',results = urldata,wordcount = datacount,timecount = top_features)
+    for i in range(len(topping)):
+        top_features.append(topping[i].replace(",","") + lineto)
 
 
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning)
+
+@app.route('/resulting', methods=['GET','POST'])
+def resulting():
+    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features)
+
+@app.route('/cosinere', methods = ['GET','POST'])
+def cosinere():
+    return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_resulturl)
 
 if __name__ == "__main__":
     app.run()
