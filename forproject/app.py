@@ -153,7 +153,7 @@ def textfile():
 
         for k in range(3):
             for r in range(countingline):
-               if (cos_sorted[k] == cos_result[r]) and (cos_sorted[k] != 1):
+               if (cos_sorted[k] == cos_result[r]):
                    cos_resulturl.append(urldata[r] + "\n")
 
         cos_final.append(cos_resulturl)
@@ -173,11 +173,11 @@ def textfile():
         top_features.append(topping[i].replace(",","") + lineto)
 
 
-    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning,urls= cos_final)
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,message= warning,topword = top_features, urls= cos_final)
 
 @app.route('/resulting', methods=['GET','POST'])
 def resulting():
-    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = cos_final)
+    return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features)
 
 @app.route('/cosinere', methods=['GET','POST'])
 def cosinere():
