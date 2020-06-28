@@ -77,6 +77,7 @@ def textfile():
         ash = BeautifulSoup(twebpage,'html.parser')
         buck = str(ash.findAll("div",{"class":"section"}))
 
+
         urlvalue.append("success")
 
         #fail: no url, and url that can't crawling.
@@ -95,7 +96,7 @@ def textfile():
 
         timecounted.append(txendtime)
 
-    
+
     tfidf_vect_simple = TfidfVectorizer()
     feature_vect_simple = tfidf_vect_simple.fit_transform(doc_list)
 
@@ -104,38 +105,13 @@ def textfile():
     vect1 = np.array(feature_vect_dense[0]).reshape(-1,)
     vect2 = np.array(feature_vect_dense[1]).reshape(-1,)
     
-    similarity_simple = list()
+    indices = np.argsort(tfidf_vect_simple.idf_)[::-1]
+    features = tfidf_vect_simple.get_feature_names()
+    top_n = 10
 
-    similarity_simple.append(cos_similarity(vect1, vect2))
+    top_features = [features[i] for i in indices[:top_n]]
 
-    return render_template('web.html',results = urldata,wordcount = datacount,timecount = similarity_simple)
-
-@app.route('/tftesting', methods = ['GET','POST'])
-def tftest():
-    temp = request.args.get('results')
-    tfdata = 
-    tfpage = urlopen(results[tfdata])
-    kali = BequtifulSoup(tfpage,'html.parser')
-
-    lesion = str(kali.findAll("div",{"class":"section"}))
-
-
-      for urllist in urldata:
-        twebpage = urlopen(urllist)
-        ash = BeautifulSoup(twebpage,'html.parser')
-        buck = str(ash.findAll("div",{"class":"section"}))
-
-        urlvalue.append("success")
-
-        #fail: no url, and url that can't crawling.
-
-        buck = re.sub('<.+?>',"",buck,0).strip()
-
-
-
-        glaz = buck.replace('(',' ').replace(')',' ').replace(',',' ').replace('.',' ').replace(";"," ").replace('"',' ').replace("'"," ").split()
-
-
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = top_features)
 
 
 
