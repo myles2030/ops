@@ -21,6 +21,7 @@ urldata = list()
 cos_result = list()
 countingline = 0
 cos_check = list()
+cos_resulturl = list()
 
 app = Flask(__name__)
 
@@ -43,7 +44,10 @@ def urladdress():
 
 
     temp = request.args.get('results')
-    
+   
+    if temp == '':
+        return render_template('web.html',results=0,wordcount=0,timecount = 0, topword=0,message='fail')
+
     webpage = urlopen(temp)
     bs = BeautifulSoup(webpage,'html.parser')
     tags = str(bs.findAll("div",{"class":"section"}))
@@ -68,10 +72,11 @@ def urladdress():
 
 @app.route('/textfile', methods = ['GET','POST'])
 def textfile():
-
-    f = request.files['file']
-    f.save(secure_filename(f.filename))
     
+    f = request.files['file']
+
+    f.save(secure_filename(f.filename))
+   
     tf = open("url_list.txt", "r")
     
     urlvalue = list()
@@ -114,8 +119,7 @@ def textfile():
     warning = "success"
 
     for cuv in range(countingline - 1):
-        l = cuv + 1
-        for l in range(countingline):
+        for l in range(cuv+1,countingline):
             if urldata[cuv] == urldata[l]:
                 warning = "same url"
     for z in range(20):
@@ -123,6 +127,9 @@ def textfile():
          cos_result.append(0)
 
     for m in range(countingline):
+        for z in range(20):
+            cos_check[z]=0
+            cos_result[z]=0
 
         cosinestart = time.time()
 
@@ -164,13 +171,13 @@ def textfile():
         top_features.append(topping[i].replace(",","") + lineto)
 
 
-    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning)
+    return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,topword = top_features,message= warning,urls= cos_resulturl)
 
 @app.route('/resulting', methods=['GET','POST'])
 def resulting():
     return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features)
 
-@app.route('/cosinere', methods = ['GET','POST'])
+@app.route('/cosinere', methods=['GET','POST'])
 def cosinere():
     return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_resulturl)
 
