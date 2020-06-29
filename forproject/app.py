@@ -246,12 +246,12 @@ def textfile():
 
 @app.route('/textfile/resulting', methods=['GET','POST'])
 def resulting():
-    if(request.method=='GET'):
-        return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features,urls=cos_final)
-    else:
-        vul=""
-        if request.form.get("btn12","") == vul:
-            return render_template('web.html',results=urldata,wordcount=cosinetime,timecount=cosinetime,topword = top_features,urls=cos_final)
+    if request.method == 'POST':
+        if request.form.get('btn1') == 'check':
+            return render_template('web.html',results=urldata,wordcount=datacount,timecount = tfidftime,topword=top_features,urls=cos_final)
+        elif request.form.get('btn11') == 'check':
+            return render_template('web.html',results=urldata,wordcount=datacount,timecount=cosinetime,topword=top_features,urls=cos_final)
+
 
 if __name__ == "__main__":
     app.run()
