@@ -1,5 +1,0 @@
-constructing first web page with html and python
-1. get url address and txtfile.(python)
-2. txt file should contain various url addresses.
-3. python will get contents in 2.
-4. use cosine similarity to find the most smilar url in txtfile as first input url. 

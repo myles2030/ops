@@ -82,7 +82,7 @@ def urladdress():
             "tfidftime" : 0,
             "cosinetime" : 0
             }
-   # es.index(index = "data_list", doc_type ="_doc",body = doc)
+    es.index(index = "data_list", doc_type ="_doc",body = doc)
 
 
     warning ="success, but you can't analyze"
@@ -240,7 +240,7 @@ def textfile():
               "tfidftime" : tfidftime[m],
               "cosinetime" : cosinetime[m]
               }
-      #  es.index(index = "data_list", doc_type ="_doc",body = doc)
+        es.index(index = "data_list", doc_type ="_doc",body = doc)
 
     return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,message= warning,topword = top_features, urls= cos_final)
 
