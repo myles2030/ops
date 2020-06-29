@@ -244,12 +244,14 @@ def textfile():
 
     return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,message= warning,topword = top_features, urls= cos_final)
 
-@app.route('/resulting', methods=['GET','POST'])
+@app.route('/textfile/resulting', methods=['GET','POST'])
 def resulting():
     if(request.method=='GET'):
         return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features,urls=cos_final)
     else:
-        return render_template('web.html',results=urldata,wordcount=cosinetime,timecount=cosinetime,topword = top_features,urls=cos_final)
+        vul=""
+        if request.form.get("btn12","") == vul:
+            return render_template('web.html',results=urldata,wordcount=cosinetime,timecount=cosinetime,topword = top_features,urls=cos_final)
 
 if __name__ == "__main__":
     app.run()
