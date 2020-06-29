@@ -8,6 +8,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 import time
 import numpy as np
+import sys
+from elasticsearch import Elasticsearch
+
+es_host = "127.0.0.1"
+es_port = "9200"
+
+es = Elasticsearch([{'host':es_host,'port':es_port}],timeout=60)
 
 cos_vect = list()
 counting = 0
@@ -66,6 +73,18 @@ def urladdress():
     wordre.append(count)
     timere.append(endtime)
 
+    index = "data_list"
+
+    doc={
+            "url" : temp,
+            "wordcount" : count,
+            "time" : endtime,
+            "tfidftime" : 0,
+            "cosinetime" : 0
+            }
+   # es.index(index = "data_list", doc_type ="_doc",body = doc)
+
+
     warning ="success, but you can't analyze"
 
     return render_template('web.html', results = urlre,wordcount = wordre,timecount = timere,topword = 0,message = warning,urls=0)
@@ -82,6 +101,37 @@ def textfile():
     urlvalue = list()
 
     global countingline
+    global counting
+    global cos_vect
+    global top_features
+    global timecounted
+    global datacount
+    global tfidftime
+    global cosinetime
+    global urldata
+    global cos_result
+    global cos_check
+    global cos_final
+
+
+
+    if countingline != 0:
+        countingline = 0
+        cos_vect = list()
+        counting = 0
+        top_features = list()
+        urldata = list()
+        timecounted = list()
+        datacount = list()
+        tfidftime = list()
+        cosinetime = list()
+        urldata = list()
+        cos_result = list()
+        countingline = 0
+        cos_check = list()
+        cos_final = list()
+
+
 
     while True:
         line = tf.readline()
@@ -141,8 +191,9 @@ def textfile():
             cos_vect.append(np.array(feature_vect_dense[i]).reshape(-1,))
         
         for i in range(countingline):
-                cos_check[i] = cos_similarity(cos_vect[m],cos_vect[i])
                 cos_result[i] = cos_similarity(cos_vect[m],cos_vect[i])
+                if i == m:
+                   cos_result[i]=0
 
         cosinetime.append(time.time()-cosinestart)
         matching = list()
@@ -179,20 +230,27 @@ def textfile():
         top_features.append(lineto + topping[i].replace(",",""))
 
 
+    index = "data_list"
+    
+    for m in range(0,1):
+        doc={
+              "url" : urldata[m],
+              "wordcount" : datacount[m],
+              "time" : timecounted[m],
+              "tfidftime" : tfidftime[m],
+              "cosinetime" : cosinetime[m]
+              }
+      #  es.index(index = "data_list", doc_type ="_doc",body = doc)
+
     return render_template('web.html',results = urldata,wordcount = datacount,timecount = timecounted,message= warning,topword = top_features, urls= cos_final)
 
 @app.route('/resulting', methods=['GET','POST'])
 def resulting():
     if(request.method=='GET'):
         return render_template('web.html',results = urldata,wordcount = datacount, timecount = tfidftime, topword = top_features,urls=cos_final)
-    elif(request.method=='POST'):
-        return render_template('web.html',results=urldata,wordcount=datacount,timecount=cosinetime,topword = top_features,urls=cos_final)
-@app.route('/cosinere', methods=['GET','POST'])
-def cosinere():
-    return render_template('web.html',results = urldata, wordcount = datacount, timecount = cosinetime, urls = cos_final)
+    else:
+        return render_template('web.html',results=urldata,wordcount=cosinetime,timecount=cosinetime,topword = top_features,urls=cos_final)
 
 if __name__ == "__main__":
     app.run()
-
-
 

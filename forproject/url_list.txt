@@ -1,3 +1,7 @@
 http://ambari.apache.org/
 http://flume.apache.org/
 http://turbine.apache.org/
+http://portals.apache.org/
+http://myfaces.apache.org/
+http://commons.apache.org/
+http://helix.apache.org/
